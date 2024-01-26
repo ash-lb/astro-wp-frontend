@@ -11,5 +11,8 @@
   },
   "dependencies": {
     "astro": "^4.2.5"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.1"
   }
 }
