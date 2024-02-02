@@ -70,6 +70,97 @@ export async function homePagePostsQuery() {
   return data;
 }
 
+export async function getComponentsByURI(uri) {
+  const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: `query GetComponentsByURI($uri: String!) {
+                nodeByUri(uri: $uri) {
+                  __typename
+                  isContentNode
+                  isTermNode
+                  ... on Post {
+                    id
+                    title
+                    date
+                    uri
+                    excerpt
+                    content
+                    editorBlocks {
+                      renderedHtml
+                      name
+                    }
+                    categories {
+                      nodes {
+                        name
+                        uri
+                      }
+                    }
+                    featuredImage {
+                      node {
+                        srcSet
+                        sourceUrl
+                        altText
+                        mediaDetails {
+                          height
+                          width
+                        }
+                      }
+                    }
+                  }
+                  ... on Page {
+                    id
+                    title
+                    uri
+                    date
+                    content
+                    editorBlocks {
+                      renderedHtml
+                      name
+                    }
+                  }
+                  ... on Category {
+                    id
+                    name
+                    posts {
+                      nodes {
+                        date
+                        title
+                        excerpt
+                        uri
+                        categories {
+                          nodes {
+                            name
+                            uri
+                          }
+                        }
+                        featuredImage {
+                          node {
+                            srcSet
+                            sourceUrl
+                            altText
+                            mediaDetails {
+                              height
+                              width
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+      variables: {
+        uri: uri,
+      },
+    }),
+  });
+  const { data } = await response.json();
+  return data;
+}
+
 export async function getNodeByURI(uri) {
   const response = await fetch(import.meta.env.WORDPRESS_API_URL, {
     method: "post",

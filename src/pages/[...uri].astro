@@ -3,8 +3,10 @@ export const prerender = true;
 import MainLayout from "../layouts/MainLayout.astro";
 import Archive from "../components/templates/Archive.astro";
 import Single from "../components/templates/Single.astro";
-import { getNodeByURI, getAllUris } from "../lib/api";
+import { getNodeByURI, getComponentsByURI, getAllUris } from "../lib/api";
 const uri = `/${Astro.params.uri}/`;
+const components = await getComponentsByURI(uri);
+const componentsData = components.nodeByUri.editorBlocks;
 const data = await getNodeByURI(uri);
 const node = data.nodeByUri;
 
@@ -36,6 +38,10 @@ function resolveContentTemplate(node) {
 
 const Template = resolveContentTemplate(node);
 ---
+
+<code>
+  {JSON.stringify(componentsData, null, 2)}
+</code>
 
 <MainLayout title={node.title || node.name} description={node.excerpt}>
   <Template node={node} />
