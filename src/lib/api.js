@@ -76,76 +76,26 @@ export async function getComponentsByURI(uri) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       query: `query GetComponentsByURI($uri: String!) {
-                nodeByUri(uri: $uri) {
-                  __typename
-                  isContentNode
-                  isTermNode
-                  ... on Post {
-                    id
-                    title
-                    date
-                    uri
-                    excerpt
-                    content
-                    editorBlocks {
-                      renderedHtml
-                      name
-                    }
-                    categories {
-                      nodes {
-                        name
-                        uri
-                      }
-                    }
-                    featuredImage {
-                      node {
-                        srcSet
-                        sourceUrl
-                        altText
-                        mediaDetails {
-                          height
-                          width
-                        }
-                      }
-                    }
-                  }
-                  ... on Page {
-                    id
-                    title
-                    uri
-                    date
-                    content
-                    editorBlocks {
-                      renderedHtml
-                      name
-                    }
-                  }
-                  ... on Category {
-                    id
+                pageBy(uri: $uri) {
+                  editorBlocks {
+                    __typename
                     name
-                    posts {
-                      nodes {
-                        date
-                        title
-                        excerpt
-                        uri
-                        categories {
-                          nodes {
-                            name
-                            uri
-                          }
-                        }
-                        featuredImage {
-                          node {
-                            srcSet
-                            sourceUrl
-                            altText
-                            mediaDetails {
-                              height
-                              width
-                            }
-                          }
-                        }
+                    id: clientId
+                    parentClientId
+                    ... on CoreColumns {
+                      attributes {
+                        className
+                      }
+                    }
+                    ... on CoreColumn {
+                      attributes {
+                        className
+                      }
+                    }
+                    ... on CoreParagraph {
+                      attributes {
+                        content
+                        className
                       }
                     }
                   }
