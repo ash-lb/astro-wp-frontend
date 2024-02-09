@@ -4,8 +4,18 @@ import SiteFooter from "../components/SiteFooter.astro";
 import { navQuery } from "../lib/api";
 const { menus, generalSettings } = await navQuery();
 const primaryMenu = menus.nodes[0];
-
+const plugins = await Astro.glob("../components/**/*.astro");
 const { title, description, components } = Astro.props;
+
+const existingComponents = components.map((component) => component.__typename);
+
+const requiredPlugins = plugins.filter((plugin) => {
+  let filename = plugin.file.split("/").pop();
+  filename = filename.split(".")[0];
+  if (existingComponents.includes(filename)) {
+    return plugin;
+  }
+});
 ---
 
 <html lang="en">
@@ -22,7 +32,9 @@ const { title, description, components } = Astro.props;
       <SiteNav menu={primaryMenu} generalSettings={generalSettings} />
       <hr />
       <code>
-        {JSON.stringify(components, null, 2)}
+        <!-- {JSON.stringify(existingComponents, null, 2)}
+        {JSON.stringify(requiredPlugins, null, 2)} -->
+        {requiredPlugins.map((plugin) => <plugin.default />)}
       </code>
     </main>
     <SiteFooter />
